@@ -1,0 +1,29 @@
+syntax = "proto3";
+package gcanpb;
+
+service Producer {
+        rpc Send(SendRequest) returns (SendResponse) {}
+        rpc SendStream(stream SendRequest) returns (stream SendResponse) {}
+}
+service Consumer {
+        rpc Receive(ReceiveRequest) returns (stream Response) {}
+}
+
+message SendRequest {
+        string Topic = 1;
+        string Key = 2;
+        bytes Value = 3;
+}
+
+message SendResponse {}
+
+message ReceiveRequest {
+        string Topic = 1;
+        int32 Partition = 2;
+        int64 Offset = 3;
+}
+
+message Response {
+        string Key = 2;
+        bytes Value = 3;
+}
