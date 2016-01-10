@@ -10,9 +10,14 @@ type Server struct {
 
 // NewServer prepares a new Server instance.
 func NewServer() (*Server, error) {
+	storage := newInmemStorage()
 	return &Server{
-		ProducerServer: &ProducerServer{},
-		ConsumerServer: &ConsumerServer{},
+		ProducerServer: &ProducerServer{
+			Storage: storage,
+		},
+		ConsumerServer: &ConsumerServer{
+			Storage: storage,
+		},
 	}, nil
 }
 

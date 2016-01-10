@@ -9,7 +9,9 @@ import (
 )
 
 // ProducerServer implements the server portsion of the gcan Producer service.
-type ProducerServer struct{}
+type ProducerServer struct {
+	Storage Storage
+}
 
 var _ gcanpb.ProducerServer = (*ProducerServer)(nil)
 
@@ -33,6 +35,10 @@ func (p *ProducerServer) SendStream(srv gcanpb.Producer_SendStreamServer) error 
 			return err
 		}
 		log.Println("compressed?", msg.MessageSet.IsCompressedSet())
+		if err := p.Storage.Publish(context.Background(), msg.Topic, msg.MessageSet); err != nil {
+			log.Error(err)
+			return err
+		}
 		if msg.MessageSet.IsCompressedSet() {
 			msg.MessageSet, err = msg.MessageSet.DecompressSet()
 			if err != nil {
