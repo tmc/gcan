@@ -7,13 +7,34 @@ service Producer {
 }
 
 service Consumer {
-        rpc Receive(ReceiveRequest) returns (stream Response) {}
+        rpc Receive(ReceiveRequest) returns (stream MessageSet) {}
+}
+
+
+// MessageSet is the shared encoding that is used both on disk and over the wire.
+message MessageSet {
+        // Offset is not populated by producers.
+        int64 Offset = 1;
+        repeated Message Messages = 2;
+}
+
+// Message is an individual key-value pair.
+message Message {
+        // CRC32 of all following fields
+        uint32 CRC = 1;
+        enum compression {
+                NONE = 0;
+                ZLIB = 1;
+                SNAPPY = 2;
+        };
+        compression Compression = 2;
+        bytes Key = 3;
+        bytes Value = 4;
 }
 
 message SendRequest {
         string Topic = 1;
-        string Key = 2;
-        bytes Value = 3;
+        MessageSet MessageSet = 2;
 }
 
 message SendResponse {}
@@ -24,7 +45,8 @@ message ReceiveRequest {
         int64 Offset = 3;
 }
 
-message Response {
-        string Key = 2;
-        bytes Value = 3;
+
+enum Err {
+        Unknown = 0;
+        CRCChecksumFailed = 1;
 }

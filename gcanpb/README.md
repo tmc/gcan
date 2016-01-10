@@ -12,15 +12,43 @@ It is generated from these files:
 It has these top-level messages:
 
 
+	MessageSet
+	Message
 	SendRequest
 	SendResponse
 	ReceiveRequest
-	Response
 
 
 
 
 
+## Variables
+``` go
+var Err_name = map[int32]string{
+    0: "Unknown",
+    1: "CRCChecksumFailed",
+}
+```
+``` go
+var Err_value = map[string]int32{
+    "Unknown":           0,
+    "CRCChecksumFailed": 1,
+}
+```
+``` go
+var MessageCompression_name = map[int32]string{
+    0: "NONE",
+    1: "ZLIB",
+    2: "SNAPPY",
+}
+```
+``` go
+var MessageCompression_value = map[string]int32{
+    "NONE":   0,
+    "ZLIB":   1,
+    "SNAPPY": 2,
+}
+```
 
 ## func RegisterConsumerServer
 ``` go
@@ -73,7 +101,7 @@ type ConsumerServer interface {
 ## type Consumer_ReceiveClient
 ``` go
 type Consumer_ReceiveClient interface {
-    Recv() (*Response, error)
+    Recv() (*MessageSet, error)
     grpc.ClientStream
 }
 ```
@@ -90,7 +118,7 @@ type Consumer_ReceiveClient interface {
 ## type Consumer_ReceiveServer
 ``` go
 type Consumer_ReceiveServer interface {
-    Send(*Response) error
+    Send(*MessageSet) error
     grpc.ServerStream
 }
 ```
@@ -102,6 +130,191 @@ type Consumer_ReceiveServer interface {
 
 
 
+
+
+## type Err
+``` go
+type Err int32
+```
+
+
+``` go
+const (
+    Err_Unknown           Err = 0
+    Err_CRCChecksumFailed Err = 1
+)
+```
+
+
+
+
+
+
+
+
+### func (Err) EnumDescriptor
+``` go
+func (Err) EnumDescriptor() ([]byte, []int)
+```
+
+
+### func (Err) Error
+``` go
+func (x Err) Error() string
+```
+
+
+### func (Err) String
+``` go
+func (x Err) String() string
+```
+
+
+## type Message
+``` go
+type Message struct {
+    // CRC32 of all following fields
+    CRC         uint32             `protobuf:"varint,1,opt,name=CRC" json:"CRC,omitempty"`
+    Compression MessageCompression `protobuf:"varint,2,opt,name=Compression,enum=gcanpb.MessageCompression" json:"Compression,omitempty"`
+    Key         []byte             `protobuf:"bytes,3,opt,name=Key,proto3" json:"Key,omitempty"`
+    Value       []byte             `protobuf:"bytes,4,opt,name=Value,proto3" json:"Value,omitempty"`
+}
+```
+Message is an individual key-value pair.
+
+
+
+
+
+
+
+
+
+
+
+### func (\*Message) CheckIntegrity
+``` go
+func (m *Message) CheckIntegrity() error
+```
+
+
+### func (\*Message) ComputeCRC
+``` go
+func (m *Message) ComputeCRC() uint32
+```
+
+
+### func (\*Message) Descriptor
+``` go
+func (*Message) Descriptor() ([]byte, []int)
+```
+
+
+### func (\*Message) ProtoMessage
+``` go
+func (*Message) ProtoMessage()
+```
+
+
+### func (\*Message) Reset
+``` go
+func (m *Message) Reset()
+```
+
+
+### func (\*Message) String
+``` go
+func (m *Message) String() string
+```
+
+
+## type MessageCompression
+``` go
+type MessageCompression int32
+```
+
+
+``` go
+const (
+    Message_NONE   MessageCompression = 0
+    Message_ZLIB   MessageCompression = 1
+    Message_SNAPPY MessageCompression = 2
+)
+```
+
+
+
+
+
+
+
+
+### func (MessageCompression) EnumDescriptor
+``` go
+func (MessageCompression) EnumDescriptor() ([]byte, []int)
+```
+
+
+### func (MessageCompression) String
+``` go
+func (x MessageCompression) String() string
+```
+
+
+## type MessageSet
+``` go
+type MessageSet struct {
+    // Offset is not populated by producers.
+    Offset   int64      `protobuf:"varint,1,opt,name=Offset" json:"Offset,omitempty"`
+    Messages []*Message `protobuf:"bytes,2,rep,name=Messages" json:"Messages,omitempty"`
+}
+```
+MessageSet is the shared encoding that is used both on disk and over the wire.
+
+
+
+
+
+
+
+
+
+
+
+### func (\*MessageSet) CheckIntegrity
+``` go
+func (m *MessageSet) CheckIntegrity() error
+```
+
+
+### func (\*MessageSet) Descriptor
+``` go
+func (*MessageSet) Descriptor() ([]byte, []int)
+```
+
+
+### func (\*MessageSet) GetMessages
+``` go
+func (m *MessageSet) GetMessages() []*Message
+```
+
+
+### func (\*MessageSet) ProtoMessage
+``` go
+func (*MessageSet) ProtoMessage()
+```
+
+
+### func (\*MessageSet) Reset
+``` go
+func (m *MessageSet) Reset()
+```
+
+
+### func (\*MessageSet) String
+``` go
+func (m *MessageSet) String() string
+```
 
 
 ## type ProducerClient
@@ -221,53 +434,11 @@ func (m *ReceiveRequest) String() string
 ```
 
 
-## type Response
-``` go
-type Response struct {
-    Key   string `protobuf:"bytes,2,opt,name=Key" json:"Key,omitempty"`
-    Value []byte `protobuf:"bytes,3,opt,name=Value,proto3" json:"Value,omitempty"`
-}
-```
-
-
-
-
-
-
-
-
-
-
-### func (\*Response) Descriptor
-``` go
-func (*Response) Descriptor() ([]byte, []int)
-```
-
-
-### func (\*Response) ProtoMessage
-``` go
-func (*Response) ProtoMessage()
-```
-
-
-### func (\*Response) Reset
-``` go
-func (m *Response) Reset()
-```
-
-
-### func (\*Response) String
-``` go
-func (m *Response) String() string
-```
-
-
 ## type SendRequest
 ``` go
 type SendRequest struct {
-    Topic string `protobuf:"bytes,1,opt,name=Topic" json:"Topic,omitempty"`
-    Key   string `protobuf:"bytes,2,opt,name=Key" json:"Key,omitempty"`
-    Value []byte `protobuf:"bytes,3,opt,name=Value,proto3" json:"Value,omitempty"`
+    Topic      string      `protobuf:"bytes,1,opt,name=Topic" json:"Topic,omitempty"`
+    MessageSet *MessageSet `protobuf:"bytes,2,opt,name=MessageSet" json:"MessageSet,omitempty"`
 }
 ```
 
@@ -283,6 +454,12 @@ type SendRequest struct {
 ### func (\*SendRequest) Descriptor
 ``` go
 func (*SendRequest) Descriptor() ([]byte, []int)
+```
+
+
+### func (\*SendRequest) GetMessageSet
+``` go
+func (m *SendRequest) GetMessageSet() *MessageSet
 ```
 
 

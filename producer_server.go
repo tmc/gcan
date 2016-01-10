@@ -28,6 +28,12 @@ func (p *ProducerServer) SendStream(srv gcanpb.Producer_SendStreamServer) error 
 			return err
 		}
 		log.Println("got new message", msg)
+
+		if err := msg.MessageSet.CheckIntegrity(); err != nil {
+			log.Error(err)
+			return err
+		}
+
 		if err := srv.Send(&gcanpb.SendResponse{}); err != nil {
 			log.Error(err)
 			return err

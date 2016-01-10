@@ -44,12 +44,15 @@ func (c *CatOptions) Execute(args []string) error {
 	for scanner.Scan() {
 		buf := scanner.Bytes()
 		parts := bytes.SplitN(buf, keySeparator, 2)
-		req := &gcanpb.SendRequest{
-			Topic: c.Topic,
-			Key:   string(parts[0]),
-		}
+		var key, value []byte
+		key = parts[0]
 		if len(parts) > 1 {
-			req.Value = parts[1]
+			value = parts[1]
+		}
+
+		req := &gcanpb.SendRequest{
+			Topic:      c.Topic,
+			MessageSet: kvToMessageSet(key, value),
 		}
 		if err := stream.Send(req); err != nil {
 			log.Errorln(err)
@@ -61,4 +64,17 @@ func (c *CatOptions) Execute(args []string) error {
 		}
 	}
 	return nil
+}
+
+func kvToMessageSet(key, value []byte) *gcanpb.MessageSet {
+	ms := &gcanpb.MessageSet{
+		Messages: []*gcanpb.Message{
+			{
+				Key:   key,
+				Value: value,
+			},
+		},
+	}
+	ms.Messages[0].CRC = ms.Messages[0].ComputeCRC()
+	return ms
 }
