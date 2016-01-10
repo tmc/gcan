@@ -30,6 +30,10 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+const _ = proto.ProtoPackageIsVersion1
+
 type SendRequest struct {
 	Topic string `protobuf:"bytes,1,opt,name=Topic" json:"Topic,omitempty"`
 	Key   string `protobuf:"bytes,2,opt,name=Key" json:"Key,omitempty"`

@@ -5,6 +5,7 @@ service Producer {
         rpc Send(SendRequest) returns (SendResponse) {}
         rpc SendStream(stream SendRequest) returns (stream SendResponse) {}
 }
+
 service Consumer {
         rpc Receive(ReceiveRequest) returns (stream Response) {}
 }
