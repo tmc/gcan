@@ -1,0 +1,32 @@
+.TH gcan 1 ""
+.SH NAME
+gcan \- gcan cli
+.SH SYNOPSIS
+\fBgcan\fP [OPTIONS]
+.SH DESCRIPTION
+
+.SH OPTIONS
+.TP
+\fB\fB\-v\fR, \fB\-\-verbose\fR\fP
+Be verbose.
+.TP
+\fB\fB\-s\fR, \fB\-\-bootstrap-server\fR <default: \fI":4226"\fR>\fP
+Server addr to bootstrap with.
+.TP
+\fB\fB\-h\fR, \fB\-\-help\fR\fP
+Show this help message
+.SH COMMANDS
+.SS cat
+cat consumes messages from stdin
+
+\fBUsage\fP: gcan [OPTIONS] cat [cat-OPTIONS]
+.TP
+.TP
+\fB\fB\-t\fR, \fB\-\-topic\fR (\fIrequired\fR)\fP
+Topic to send to.
+.TP
+\fB\fB\-k\fR, \fB\-\-keySeparator\fR <default: \fI"\\t"\fR>\fP
+Value to separate key from values in lines
+.TP
+\fB\fB\-h\fR, \fB\-\-help\fR\fP
+Show this help message

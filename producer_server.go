@@ -3,6 +3,7 @@ package gcan
 import (
 	"fmt"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/tmc/gcan/gcanpb"
 	"golang.org/x/net/context"
 )
@@ -19,5 +20,18 @@ func (p *ProducerServer) Send(ctx context.Context, req *gcanpb.SendRequest) (*gc
 
 // SendStream responds to a stream of Send messages from a Producer service client.
 func (p *ProducerServer) SendStream(srv gcanpb.Producer_SendStreamServer) error {
-	return fmt.Errorf("ProducerServer.SendStream: not implemented")
+	log.Println("got new stream")
+	for {
+		msg, err := srv.Recv()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		log.Println("got new message", msg)
+		if err := srv.Send(&gcanpb.SendResponse{}); err != nil {
+			log.Error(err)
+			return err
+		}
+	}
+	return nil
 }
