@@ -343,6 +343,23 @@ func (m *SendResponse) String() string
 ```
 
 
+## type Server
+``` go
+type Server interface {
+    ProducerServer
+    ConsumerServer
+}
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
