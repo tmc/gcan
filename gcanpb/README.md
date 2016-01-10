@@ -26,14 +26,16 @@ It has these top-level messages:
 ## Variables
 ``` go
 var Err_name = map[int32]string{
-    0: "Unknown",
-    1: "CRCChecksumFailed",
+    0: "OK",
+    1: "Unknown",
+    2: "CRCChecksumFailed",
 }
 ```
 ``` go
 var Err_value = map[string]int32{
-    "Unknown":           0,
-    "CRCChecksumFailed": 1,
+    "OK":                0,
+    "Unknown":           1,
+    "CRCChecksumFailed": 2,
 }
 ```
 ``` go
@@ -149,8 +151,9 @@ type Err int32
 
 ``` go
 const (
-    Err_Unknown           Err = 0
-    Err_CRCChecksumFailed Err = 1
+    Err_OK                Err = 0
+    Err_Unknown           Err = 1
+    Err_CRCChecksumFailed Err = 2
 )
 ```
 

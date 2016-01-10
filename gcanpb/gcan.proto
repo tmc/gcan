@@ -52,6 +52,7 @@ message ReceiveResponse {
 }
 
 enum Err {
-        Unknown = 0;
-        CRCChecksumFailed = 1;
+        OK = 0;
+        Unknown = 1;
+        CRCChecksumFailed = 2;
 }
