@@ -27,12 +27,25 @@ func (p *ProducerServer) SendStream(srv gcanpb.Producer_SendStreamServer) error 
 			log.Error(err)
 			return err
 		}
-		log.Println("got new message", msg)
-
+		log.Println("got new message for", msg.Topic)
 		if err := msg.MessageSet.CheckIntegrity(); err != nil {
 			log.Error(err)
 			return err
 		}
+		log.Println("compressed?", msg.MessageSet.IsCompressedSet())
+		if msg.MessageSet.IsCompressedSet() {
+			msg.MessageSet, err = msg.MessageSet.DecompressSet()
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+			//re-run integrity checks
+			if err := msg.MessageSet.CheckIntegrity(); err != nil {
+				log.Error(err)
+				return err
+			}
+		}
+		log.Println("messsage passed integrity checks:", msg)
 
 		if err := srv.Send(&gcanpb.SendResponse{}); err != nil {
 			log.Error(err)

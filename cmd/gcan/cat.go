@@ -3,7 +3,10 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"os"
+	"sort"
+	"strings"
 
 	"golang.org/x/net/context"
 
@@ -12,14 +15,21 @@ import (
 )
 
 type CatOptions struct {
-	Topic        string `short:"t" long:"topic" description:"Topic to send to." required:"true"`
-	KeySeparator string `short:"k" long:"keySeparator" description:"Value to separate key from values in lines" default:"	"`
+	Topic            string `short:"t" long:"topic" description:"Topic to send to." required:"true"`
+	KeySeparator     string `short:"k" long:"keySeparator" description:"Value to separate key from values in lines" default:"	"`
+	CompressionCodec string `short:"c" long:"compression" description:"Compression codec to use." default:"NONE"`
 }
 
 var catOptions CatOptions
 
 func init() {
-	if _, err := optionsParser.AddCommand("cat", "cat consumes messages from stdin", "", &catOptions); err != nil {
+	validCodecs := []string{}
+	for codec := range gcanpb.MessageCompression_value {
+		validCodecs = append(validCodecs, codec)
+	}
+	sort.Strings(validCodecs)
+	desc := fmt.Sprintf("valid compression codecs: %s", strings.Join(validCodecs, ", "))
+	if _, err := optionsParser.AddCommand("cat", "cat consumes messages from stdin", desc, &catOptions); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -40,6 +50,7 @@ func (c *CatOptions) Execute(args []string) error {
 	}
 
 	keySeparator := []byte(c.KeySeparator)
+	compressionCodec := gcanpb.MessageCompression(gcanpb.MessageCompression_value[c.CompressionCodec])
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		buf := scanner.Bytes()
@@ -53,6 +64,12 @@ func (c *CatOptions) Execute(args []string) error {
 		req := &gcanpb.SendRequest{
 			Topic:      c.Topic,
 			MessageSet: kvToMessageSet(key, value),
+		}
+		if compressionCodec != gcanpb.Message_NONE {
+			req.MessageSet, err = req.MessageSet.Compress(compressionCodec)
+		}
+		if err != nil {
+			return err
 		}
 		if err := stream.Send(req); err != nil {
 			log.Errorln(err)
