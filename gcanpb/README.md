@@ -17,6 +17,7 @@ It has these top-level messages:
 	SendRequest
 	SendResponse
 	ReceiveRequest
+	ReceiveResponse
 
 
 
@@ -49,6 +50,14 @@ var MessageCompression_value = map[string]int32{
     "SNAPPY": 2,
 }
 ```
+
+## func NopWCloser
+``` go
+func NopWCloser(w io.Writer) io.WriteCloser
+```
+NopWCloser returns a WriteCloser with a no-op Close method wrapping
+the provided Writer w.
+
 
 ## func RegisterConsumerServer
 ``` go
@@ -101,7 +110,7 @@ type ConsumerServer interface {
 ## type Consumer_ReceiveClient
 ``` go
 type Consumer_ReceiveClient interface {
-    Recv() (*MessageSet, error)
+    Recv() (*ReceiveResponse, error)
     grpc.ClientStream
 }
 ```
@@ -118,7 +127,7 @@ type Consumer_ReceiveClient interface {
 ## type Consumer_ReceiveServer
 ``` go
 type Consumer_ReceiveServer interface {
-    Send(*MessageSet) error
+    Send(*ReceiveResponse) error
     grpc.ServerStream
 }
 ```
@@ -204,9 +213,21 @@ func (m *Message) ComputeCRC() uint32
 ```
 
 
+### func (\*Message) Decompress
+``` go
+func (m *Message) Decompress() (io.ReadCloser, error)
+```
+
+
 ### func (\*Message) Descriptor
 ``` go
 func (*Message) Descriptor() ([]byte, []int)
+```
+
+
+### func (\*Message) IsCompressed
+``` go
+func (m *Message) IsCompressed() bool
 ```
 
 
@@ -255,6 +276,18 @@ func (MessageCompression) EnumDescriptor() ([]byte, []int)
 ```
 
 
+### func (MessageCompression) NewReader
+``` go
+func (c MessageCompression) NewReader(r io.Reader) io.ReadCloser
+```
+
+
+### func (MessageCompression) NewWriter
+``` go
+func (c MessageCompression) NewWriter(w io.Writer) io.WriteCloser
+```
+
+
 ### func (MessageCompression) String
 ``` go
 func (x MessageCompression) String() string
@@ -287,6 +320,18 @@ func (m *MessageSet) CheckIntegrity() error
 ```
 
 
+### func (\*MessageSet) Compress
+``` go
+func (m *MessageSet) Compress(codec MessageCompression) (*MessageSet, error)
+```
+
+
+### func (\*MessageSet) DecompressSet
+``` go
+func (m *MessageSet) DecompressSet() (*MessageSet, error)
+```
+
+
 ### func (\*MessageSet) Descriptor
 ``` go
 func (*MessageSet) Descriptor() ([]byte, []int)
@@ -296,6 +341,12 @@ func (*MessageSet) Descriptor() ([]byte, []int)
 ### func (\*MessageSet) GetMessages
 ``` go
 func (m *MessageSet) GetMessages() []*Message
+```
+
+
+### func (\*MessageSet) IsCompressedSet
+``` go
+func (m *MessageSet) IsCompressedSet() bool
 ```
 
 
@@ -396,8 +447,8 @@ type Producer_SendStreamServer interface {
 ``` go
 type ReceiveRequest struct {
     Topic     string `protobuf:"bytes,1,opt,name=Topic" json:"Topic,omitempty"`
-    Partition int32  `protobuf:"varint,2,opt,name=Partition" json:"Partition,omitempty"`
-    Offset    int64  `protobuf:"varint,3,opt,name=Offset" json:"Offset,omitempty"`
+    Partition uint32 `protobuf:"varint,2,opt,name=Partition" json:"Partition,omitempty"`
+    Offset    uint64 `protobuf:"varint,3,opt,name=Offset" json:"Offset,omitempty"`
 }
 ```
 
@@ -431,6 +482,54 @@ func (m *ReceiveRequest) Reset()
 ### func (\*ReceiveRequest) String
 ``` go
 func (m *ReceiveRequest) String() string
+```
+
+
+## type ReceiveResponse
+``` go
+type ReceiveResponse struct {
+    Topic      string      `protobuf:"bytes,1,opt,name=Topic" json:"Topic,omitempty"`
+    Partition  uint32      `protobuf:"varint,2,opt,name=Partition" json:"Partition,omitempty"`
+    MessageSet *MessageSet `protobuf:"bytes,3,opt,name=MessageSet" json:"MessageSet,omitempty"`
+}
+```
+
+
+
+
+
+
+
+
+
+
+### func (\*ReceiveResponse) Descriptor
+``` go
+func (*ReceiveResponse) Descriptor() ([]byte, []int)
+```
+
+
+### func (\*ReceiveResponse) GetMessageSet
+``` go
+func (m *ReceiveResponse) GetMessageSet() *MessageSet
+```
+
+
+### func (\*ReceiveResponse) ProtoMessage
+``` go
+func (*ReceiveResponse) ProtoMessage()
+```
+
+
+### func (\*ReceiveResponse) Reset
+``` go
+func (m *ReceiveResponse) Reset()
+```
+
+
+### func (\*ReceiveResponse) String
+``` go
+func (m *ReceiveResponse) String() string
 ```
 
 

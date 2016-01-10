@@ -19,6 +19,8 @@ Show this help message
 .SS cat
 cat consumes messages from stdin
 
+valid compression codecs: NONE, SNAPPY, ZLIB
+
 \fBUsage\fP: gcan [OPTIONS] cat [cat-OPTIONS]
 .TP
 .TP
@@ -27,6 +29,26 @@ Topic to send to.
 .TP
 \fB\fB\-k\fR, \fB\-\-keySeparator\fR <default: \fI"\\t"\fR>\fP
 Value to separate key from values in lines
+.TP
+\fB\fB\-c\fR, \fB\-\-compression\fR <default: \fI"NONE"\fR>\fP
+Compression codec to use.
+.TP
+\fB\fB\-h\fR, \fB\-\-help\fR\fP
+Show this help message
+.SS tail
+tail consumes messages from gcan and produces them on stdout
+
+\fBUsage\fP: gcan [OPTIONS] tail [tail-OPTIONS]
+.TP
+.TP
+\fB\fB\-t\fR, \fB\-\-topic\fR (\fIrequired\fR)\fP
+Topic to read from.
+.TP
+\fB\fB\-p\fR, \fB\-\-partiition\fR <default: \fI"0"\fR>\fP
+Topic partition to consume.
+.TP
+\fB\fB\-o\fR, \fB\-\-offset\fR <default: \fI"0"\fR>\fP
+Topic offset to resume from.
 .TP
 \fB\fB\-h\fR, \fB\-\-help\fR\fP
 Show this help message
