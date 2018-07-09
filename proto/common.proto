@@ -1,0 +1,11 @@
+syntax = "proto3";
+package gcanpb;
+
+message TopicAssignment {
+        repeated PartitionAssignment PartitionAssignment = 1;
+}
+
+message PartitionAssignment {
+        repeated uint32 Replicas = 1;
+}
+

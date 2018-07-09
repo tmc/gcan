@@ -1,0 +1,19 @@
+syntax = "proto3";
+package gcanpb;
+
+import "common.proto";
+
+service Topic {
+        rpc CreateTopic(CreateTopicRequest) returns (CreateTopicResponse) {}
+}
+
+message CreateTopicRequest {
+        string Topic = 1;
+        uint32 Partitions = 2;
+        uint32 Replicas = 3;
+        // Optional
+        TopicAssignment ReplicaAssignment = 4;
+}
+
+message CreateTopicResponse {}
+
