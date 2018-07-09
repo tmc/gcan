@@ -63,6 +63,17 @@
   * [func (dst *MessageSet) XXX_Merge(src proto.Message)](#MessageSet.XXX_Merge)
   * [func (m *MessageSet) XXX_Size() int](#MessageSet.XXX_Size)
   * [func (m *MessageSet) XXX_Unmarshal(b []byte) error](#MessageSet.XXX_Unmarshal)
+* [type PartitionAssignment](#PartitionAssignment)
+  * [func (*PartitionAssignment) Descriptor() ([]byte, []int)](#PartitionAssignment.Descriptor)
+  * [func (m *PartitionAssignment) GetReplicas() []uint32](#PartitionAssignment.GetReplicas)
+  * [func (*PartitionAssignment) ProtoMessage()](#PartitionAssignment.ProtoMessage)
+  * [func (m *PartitionAssignment) Reset()](#PartitionAssignment.Reset)
+  * [func (m *PartitionAssignment) String() string](#PartitionAssignment.String)
+  * [func (m *PartitionAssignment) XXX_DiscardUnknown()](#PartitionAssignment.XXX_DiscardUnknown)
+  * [func (m *PartitionAssignment) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)](#PartitionAssignment.XXX_Marshal)
+  * [func (dst *PartitionAssignment) XXX_Merge(src proto.Message)](#PartitionAssignment.XXX_Merge)
+  * [func (m *PartitionAssignment) XXX_Size() int](#PartitionAssignment.XXX_Size)
+  * [func (m *PartitionAssignment) XXX_Unmarshal(b []byte) error](#PartitionAssignment.XXX_Unmarshal)
 * [type ProducerClient](#ProducerClient)
   * [func NewProducerClient(cc *grpc.ClientConn) ProducerClient](#NewProducerClient)
 * [type ProducerServer](#ProducerServer)
@@ -117,10 +128,21 @@
   * [func (m *SendResponse) XXX_Size() int](#SendResponse.XXX_Size)
   * [func (m *SendResponse) XXX_Unmarshal(b []byte) error](#SendResponse.XXX_Unmarshal)
 * [type Server](#Server)
+* [type TopicAssignment](#TopicAssignment)
+  * [func (*TopicAssignment) Descriptor() ([]byte, []int)](#TopicAssignment.Descriptor)
+  * [func (m *TopicAssignment) GetPartitionAssignment() []*PartitionAssignment](#TopicAssignment.GetPartitionAssignment)
+  * [func (*TopicAssignment) ProtoMessage()](#TopicAssignment.ProtoMessage)
+  * [func (m *TopicAssignment) Reset()](#TopicAssignment.Reset)
+  * [func (m *TopicAssignment) String() string](#TopicAssignment.String)
+  * [func (m *TopicAssignment) XXX_DiscardUnknown()](#TopicAssignment.XXX_DiscardUnknown)
+  * [func (m *TopicAssignment) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)](#TopicAssignment.XXX_Marshal)
+  * [func (dst *TopicAssignment) XXX_Merge(src proto.Message)](#TopicAssignment.XXX_Merge)
+  * [func (m *TopicAssignment) XXX_Size() int](#TopicAssignment.XXX_Size)
+  * [func (m *TopicAssignment) XXX_Unmarshal(b []byte) error](#TopicAssignment.XXX_Unmarshal)
 
 
 #### <a name="pkg-files">Package files</a>
-[compression.go](/src/github.com/tmc/gcan/gcanpb/compression.go) [compression_snappy.go](/src/github.com/tmc/gcan/gcanpb/compression_snappy.go) [compression_zlib.go](/src/github.com/tmc/gcan/gcanpb/compression_zlib.go) [err.go](/src/github.com/tmc/gcan/gcanpb/err.go) [gcan.pb.go](/src/github.com/tmc/gcan/gcanpb/gcan.pb.go) [gen.go](/src/github.com/tmc/gcan/gcanpb/gen.go) [ioutil.go](/src/github.com/tmc/gcan/gcanpb/ioutil.go) [message.go](/src/github.com/tmc/gcan/gcanpb/message.go) [messageset.go](/src/github.com/tmc/gcan/gcanpb/messageset.go) [server.go](/src/github.com/tmc/gcan/gcanpb/server.go) 
+[common.pb.go](/src/github.com/tmc/gcan/gcanpb/common.pb.go) [compression.go](/src/github.com/tmc/gcan/gcanpb/compression.go) [compression_snappy.go](/src/github.com/tmc/gcan/gcanpb/compression_snappy.go) [compression_zlib.go](/src/github.com/tmc/gcan/gcanpb/compression_zlib.go) [err.go](/src/github.com/tmc/gcan/gcanpb/err.go) [gcan.pb.go](/src/github.com/tmc/gcan/gcanpb/gcan.pb.go) [gen.go](/src/github.com/tmc/gcan/gcanpb/gen.go) [ioutil.go](/src/github.com/tmc/gcan/gcanpb/ioutil.go) [message.go](/src/github.com/tmc/gcan/gcanpb/message.go) [messageset.go](/src/github.com/tmc/gcan/gcanpb/messageset.go) [server.go](/src/github.com/tmc/gcan/gcanpb/server.go) 
 
 
 
@@ -611,6 +633,94 @@ func (m *MessageSet) XXX_Unmarshal(b []byte) error
 
 
 
+## <a name="PartitionAssignment">type</a> [PartitionAssignment](/src/target/common.pb.go?s=2057:2329#L59)
+``` go
+type PartitionAssignment struct {
+    Replicas             []uint32 `protobuf:"varint,1,rep,packed,name=Replicas,proto3" json:"Replicas,omitempty"`
+    XXX_NoUnkeyedLiteral struct{} `json:"-"`
+    XXX_unrecognized     []byte   `json:"-"`
+    XXX_sizecache        int32    `json:"-"`
+}
+```
+
+
+
+
+
+
+
+
+
+### <a name="PartitionAssignment.Descriptor">func</a> (\*PartitionAssignment) [Descriptor](/src/target/common.pb.go?s=2541:2597#L69)
+``` go
+func (*PartitionAssignment) Descriptor() ([]byte, []int)
+```
+
+
+
+### <a name="PartitionAssignment.GetReplicas">func</a> (\*PartitionAssignment) [GetReplicas](/src/target/common.pb.go?s=3345:3397#L90)
+``` go
+func (m *PartitionAssignment) GetReplicas() []uint32
+```
+
+
+
+### <a name="PartitionAssignment.ProtoMessage">func</a> (\*PartitionAssignment) [ProtoMessage](/src/target/common.pb.go?s=2492:2534#L68)
+``` go
+func (*PartitionAssignment) ProtoMessage()
+```
+
+
+
+### <a name="PartitionAssignment.Reset">func</a> (\*PartitionAssignment) [Reset](/src/target/common.pb.go?s=2331:2368#L66)
+``` go
+func (m *PartitionAssignment) Reset()
+```
+
+
+
+### <a name="PartitionAssignment.String">func</a> (\*PartitionAssignment) [String](/src/target/common.pb.go?s=2408:2453#L67)
+``` go
+func (m *PartitionAssignment) String() string
+```
+
+
+
+### <a name="PartitionAssignment.XXX_DiscardUnknown">func</a> (\*PartitionAssignment) [XXX_DiscardUnknown](/src/target/common.pb.go?s=3167:3217#L84)
+``` go
+func (m *PartitionAssignment) XXX_DiscardUnknown()
+```
+
+
+
+### <a name="PartitionAssignment.XXX_Marshal">func</a> (\*PartitionAssignment) [XXX_Marshal](/src/target/common.pb.go?s=2783:2870#L75)
+``` go
+func (m *PartitionAssignment) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
+```
+
+
+
+### <a name="PartitionAssignment.XXX_Merge">func</a> (\*PartitionAssignment) [XXX_Merge](/src/target/common.pb.go?s=2948:3008#L78)
+``` go
+func (dst *PartitionAssignment) XXX_Merge(src proto.Message)
+```
+
+
+
+### <a name="PartitionAssignment.XXX_Size">func</a> (\*PartitionAssignment) [XXX_Size](/src/target/common.pb.go?s=3066:3110#L81)
+``` go
+func (m *PartitionAssignment) XXX_Size() int
+```
+
+
+
+### <a name="PartitionAssignment.XXX_Unmarshal">func</a> (\*PartitionAssignment) [XXX_Unmarshal](/src/target/common.pb.go?s=2659:2718#L72)
+``` go
+func (m *PartitionAssignment) XXX_Unmarshal(b []byte) error
+```
+
+
+
 ## <a name="ProducerClient">type</a> [ProducerClient](/src/target/gcan.pb.go?s=12238:12456#L396)
 ``` go
 type ProducerClient interface {
@@ -1085,6 +1195,94 @@ type Server interface {
 
 
 
+
+
+
+## <a name="TopicAssignment">type</a> [TopicAssignment](/src/target/common.pb.go?s=627:965#L21)
+``` go
+type TopicAssignment struct {
+    PartitionAssignment  []*PartitionAssignment `protobuf:"bytes,1,rep,name=PartitionAssignment,proto3" json:"PartitionAssignment,omitempty"`
+    XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+    XXX_unrecognized     []byte                 `json:"-"`
+    XXX_sizecache        int32                  `json:"-"`
+}
+```
+
+
+
+
+
+
+
+
+
+### <a name="TopicAssignment.Descriptor">func</a> (\*TopicAssignment) [Descriptor](/src/target/common.pb.go?s=1161:1213#L31)
+``` go
+func (*TopicAssignment) Descriptor() ([]byte, []int)
+```
+
+
+
+### <a name="TopicAssignment.GetPartitionAssignment">func</a> (\*TopicAssignment) [GetPartitionAssignment](/src/target/common.pb.go?s=1917:1990#L52)
+``` go
+func (m *TopicAssignment) GetPartitionAssignment() []*PartitionAssignment
+```
+
+
+
+### <a name="TopicAssignment.ProtoMessage">func</a> (\*TopicAssignment) [ProtoMessage](/src/target/common.pb.go?s=1116:1154#L30)
+``` go
+func (*TopicAssignment) ProtoMessage()
+```
+
+
+
+### <a name="TopicAssignment.Reset">func</a> (\*TopicAssignment) [Reset](/src/target/common.pb.go?s=967:1000#L28)
+``` go
+func (m *TopicAssignment) Reset()
+```
+
+
+
+### <a name="TopicAssignment.String">func</a> (\*TopicAssignment) [String](/src/target/common.pb.go?s=1036:1077#L29)
+``` go
+func (m *TopicAssignment) String() string
+```
+
+
+
+### <a name="TopicAssignment.XXX_DiscardUnknown">func</a> (\*TopicAssignment) [XXX_DiscardUnknown](/src/target/common.pb.go?s=1751:1797#L46)
+``` go
+func (m *TopicAssignment) XXX_DiscardUnknown()
+```
+
+
+
+### <a name="TopicAssignment.XXX_Marshal">func</a> (\*TopicAssignment) [XXX_Marshal](/src/target/common.pb.go?s=1391:1474#L37)
+``` go
+func (m *TopicAssignment) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
+```
+
+
+
+### <a name="TopicAssignment.XXX_Merge">func</a> (\*TopicAssignment) [XXX_Merge](/src/target/common.pb.go?s=1548:1604#L40)
+``` go
+func (dst *TopicAssignment) XXX_Merge(src proto.Message)
+```
+
+
+
+### <a name="TopicAssignment.XXX_Size">func</a> (\*TopicAssignment) [XXX_Size](/src/target/common.pb.go?s=1658:1698#L43)
+``` go
+func (m *TopicAssignment) XXX_Size() int
+```
+
+
+
+### <a name="TopicAssignment.XXX_Unmarshal">func</a> (\*TopicAssignment) [XXX_Unmarshal](/src/target/common.pb.go?s=1275:1330#L34)
+``` go
+func (m *TopicAssignment) XXX_Unmarshal(b []byte) error
+```
 
 
 
