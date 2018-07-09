@@ -3,7 +3,7 @@ package gcan
 import (
 	"fmt"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/tmc/gcan/gcanpb"
 	"golang.org/x/net/context"
 )
