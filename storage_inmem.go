@@ -8,10 +8,15 @@ import (
 	"golang.org/x/net/context"
 )
 
+type subscriber struct {
+	topic string
+	ms    chan *gcanpb.MessageSet
+}
+
 func newInmemStorage() Storage {
 	return &inmemStorage{
 		topics:      make(map[string][]*gcanpb.MessageSet, 0),
-		subscribers: make(map[chan *gcanpb.MessageSet]bool),
+		subscribers: make(map[*subscriber]bool),
 	}
 }
 
@@ -20,7 +25,7 @@ type inmemStorage struct {
 	mu     sync.Mutex
 	topics map[string][]*gcanpb.MessageSet
 
-	subscribers map[chan *gcanpb.MessageSet]bool
+	subscribers map[*subscriber]bool
 }
 
 func (i *inmemStorage) Publish(ctx context.Context, topic string, ms *gcanpb.MessageSet) error {
@@ -34,9 +39,11 @@ func (i *inmemStorage) Publish(ctx context.Context, topic string, ms *gcanpb.Mes
 	i.topics[topic] = append(i.topics[topic], ms)
 
 	for subscriber, _ := range i.subscribers {
-		go func() {
-			subscriber <- ms
-		}()
+		if subscriber.topic == topic {
+			go func(subscriber chan *gcanpb.MessageSet) {
+				subscriber <- ms
+			}(subscriber.ms)
+		}
 	}
 	return nil
 }
@@ -46,15 +53,19 @@ func (i *inmemStorage) Subscribe(ctx context.Context, topic string, partition ui
 	defer i.mu.Unlock()
 
 	messages := make(chan *gcanpb.MessageSet)
+	s := &subscriber{
+		topic: topic,
+		ms:    messages,
+	}
 	results := make(chan *gcanpb.MessageSet)
 
-	i.subscribers[messages] = true
+	i.subscribers[s] = true
 	go func() {
 		for {
 			select {
 			case <-ctx.Done():
 				i.mu.Lock()
-				delete(i.subscribers, messages)
+				delete(i.subscribers, s)
 				i.mu.Unlock()
 			case ms := <-messages:
 				spew.Dump("Subscribe:", ms)
